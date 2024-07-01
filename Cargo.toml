@@ -5,6 +5,7 @@ members = [
   "zebra_crypto",
   "zebra_desktop",
   "zebra_storage",
+  "zebra_wasm",
   "boringascii",
 ]
 

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Zebrasign - Secure Ring-Signatures"
+    />
+    <link rel="apple-touch-icon" href="android-chrome-192x192.png" />
+    <link rel="manifest" href="manifest.json" />
+    <title>Zebrasign - Secure Ring-Signatures</title>
+    <style>
+      body {
+        font-family: Verdana, sans-serif;
+      }
+      .material-input {
+        width: 100%;
+        padding: 10px;
+        margin: 20px 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        height: 30vh;
+      }
+      .material-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #6200ea;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .material-button:hover {
+        background-color: #3700b3;
+      }
+      .message {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+      .valid {
+        color: green;
+      }
+      .invalid {
+        color: red;
+      }
+      table {
+        width: calc(100% - 40px);
+        max-width: 800px;
+        margin: 20px auto;
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        font-weight: bold;
+      }
+      tr {
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
+    <script>
+      const timestamp = new Date().getTime();
+      const script = document.createElement('script');
+      script.src = `./bootstrap.js?v=${timestamp}`;
+      document.head.appendChild(script);
+    </script>
+    <div style="text-align: center; margin-top: 20px;">
+      <img src="android-chrome-192x192.png" alt="Zebrasign Logo" style="vertical-align: middle; width: 50px; height: 50px;">
+      <span style="font-size: 24px; font-weight: bold; vertical-align: middle;">Zebrasign</span>
+    </div>
+    <div style="margin: 20px;">
+      <textarea id="signature" class="material-input" rows="4" placeholder="Enter signature here..."></textarea>
+      <button class="material-button" onclick="verifySignatureAndShowMessage()">Verify signature</button>
+      <div id="message" class="message"></div>
+      <div id="message-details" style="display: none; margin-top: 20px;">
+        <b>Message:</b><br/>
+        <span id="message-text"></span>
+        <br><br>
+        <b>This message was signed by someone with the private key associated with one of these verified identities:</b><br/>
+        <div id="fingerprints-table"></div>
+      </div>
+    </div>
+    <script>
+      function verifySignatureAndShowMessage() {
+        const signature = document.getElementById('signature').value;
+        const isValid = verifySignature(signature);
+        const messageElement = document.getElementById('message');
+        if (isValid) {
+          const fingerprintsElement = document.getElementById('fingerprints-table');
+          messageElement.textContent = 'Valid Signature!';
+          messageElement.className = 'message valid';
+          
+          const messageStart = signature.indexOf('"""') + 3;
+          const messageEnd = signature.lastIndexOf('"""');
+          const message = signature.substring(messageStart, messageEnd).trim();
+          document.getElementById('message-text').textContent = message;
+          
+          const lines = signature.trim().split('\n');
+          const fingerprints = [];
+          for (let i = lines.length - 5; i > 5; i--) {
+            const line = lines[i].trim();
+            if (line) {
+              const match = line.match(/(.*) <(.*)> (.*)/);
+              if (match) {
+                fingerprints.push({
+                  name: match[1],
+                  email: match[2],
+                  fingerprint: match[3]
+                });
+              }
+            }
+          }
+          
+          let tableHTML = '<table><thead><tr><th>Name</th><th>Email</th><th>Fingerprint</th></tr></thead><tbody>';
+          fingerprints.forEach(fp => {
+            tableHTML += `<tr><td>${fp.name}</td><td>${fp.email}</td><td>${fp.fingerprint}</td></tr>`;
+          });
+          tableHTML += '</tbody></table>';
+          
+          fingerprintsElement.innerHTML = tableHTML;
+          document.getElementById('message-details').style.display = 'block';
+        } else {
+          messageElement.textContent = 'Invalid Signature!';
+          messageElement.className = 'message invalid';
+          document.getElementById('message-details').style.display = 'none';
+        }
+      }
+    </script>
+  </body>
+</html>

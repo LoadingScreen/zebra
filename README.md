@@ -83,3 +83,25 @@ Specifically, everything inside of the `age` and `age-core` directories, as
 well as the `sign` and `verify` functions in `zebra_crypto/lib.rs`.
 
 Everything else is the copyright of Kurt Brown.
+
+## Running the app
+In the root folder, run the following cargo commands to build and run:
+```
+cargo build --release
+cargo run --release
+```
+
+To build the webapp, first generate the wasm files:
+```
+cd zebra_wasm
+wasm-pack build
+```
+
+Then, run the webapp:
+```
+cd ..
+cd zebra_webapp
+npm install
+npm run build
+npm run start
+```

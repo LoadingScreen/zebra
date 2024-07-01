@@ -1,0 +1,20 @@
+[package]
+name = "zebra_wasm"
+version = "0.1.0"
+authors = ["Simon Baars <simon.mailadres@gmail.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = []
+
+[dependencies]
+wasm-bindgen = "0.2.84"
+getrandom = { version = "0.2.12", features = ["js"] }
+zebra_crypto = { path = "../zebra_crypto" }
+
+[profile.release]
+# Tell `rustc` to optimize for small code size.
+opt-level = "s"
