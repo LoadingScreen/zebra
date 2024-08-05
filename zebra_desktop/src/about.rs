@@ -6,8 +6,8 @@ pub fn About() -> Element {
     rsx! {
         div {
             class: "about",
-            h1 {"Zebra"}
-            p {"Version 1.0.0-alpha"}
+            h1 {"ZebraSign"}
+            p {"Version 1.0.0-beta"}
             p {"A tool for creating and verifying ring signatures."}
             p {
                 class: "copyright_info",
@@ -26,8 +26,8 @@ pub fn About() -> Element {
                 class: "copyright_info",
                 "All other content is written by Ben Weinstein-Raun; copyright assigned to Kurt Brown. Source code available at "
                 a {
-                    href: "https://github.com/benwr/zebra",
-                    "https://github.com/benwr/zebra"
+                    href: "https://github.com/LoadingScreen/zebra",
+                    "https://github.com/LoadingScreen/zebra"
                 }
             }
         }

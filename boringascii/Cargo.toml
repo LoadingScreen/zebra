@@ -5,7 +5,7 @@ edition = "2021"
 authors.workspace = true
 description = "Strings that can only be constructed to contain non-whitespace, non-control ASCII characters."
 license = "Apache-2.0 OR CC0-1.0"
-repository = "https://github.com/benwr/zebra"
+repository = "https://github.com/LoadingScreen/zebra"
 
 [dependencies]
 borsh.workspace = true

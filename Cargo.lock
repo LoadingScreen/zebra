@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "Zebra"
+name = "ZebraSign"
 version = "1.0.0-alpha"
 dependencies = [
  "boringascii",

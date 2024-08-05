@@ -12,9 +12,9 @@ members = [
 [workspace.package]
 edition = "2021"
 rust-version = "1.65"
-authors = ["Ben Weinstein-Raun <b@w-r.me>"]
+authors = ["Ben Weinstein-Raun <b@w-r.me>", "Simon Baars"]
 license = ""
-repository = "https://github.com/benwr/zebra"
+repository = "https://github.com/LoadingScreen/zebra"
 
 [workspace.dependencies]
 boringascii = { path = "boringascii" }

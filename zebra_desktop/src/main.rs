@@ -8,7 +8,7 @@ use dioxus::prelude::*;
 use dioxus_desktop::WindowBuilder;
 use dioxus_free_icons::{
     icons::go_icons::{
-        GoCopy, GoPlusCircle, GoSearch, GoShieldCheck, GoShieldLock, GoTrash, GoUnverified,
+        GoCheck, GoCopy, GoPlusCircle, GoSearch, GoShieldCheck, GoShieldLock, GoTrash, GoUnverified,
         GoVerified,
     },
     Icon,
@@ -22,7 +22,7 @@ use zebra_storage::{default_db_path, Database, VerificationInfo};
 fn make_config() -> dioxus_desktop::Config {
     dioxus_desktop::Config::default().with_window(
         WindowBuilder::new()
-            .with_title("Zebra")
+            .with_title("ZebraSign")
             .with_min_inner_size(dioxus_desktop::tao::dpi::Size::Logical(
                 dioxus_desktop::tao::dpi::LogicalSize {
                     width: 900.0,
@@ -59,6 +59,10 @@ struct TextToSign(String);
 struct MessageToVerify(Option<Result<SignedMessage, SignatureParseError>>);
 struct SelectedPrivateSigner(Option<PublicKey>);
 struct SelectedPublicSigners(BTreeSet<PublicKey>);
+/// None is "there was no key imported" and "Err(e)" is "the key failed to import"
+struct ImportKeyResult(Option<Result<(), String>>);
+struct CopiedToClipboard(Option<PublicKey>);
+struct SignAndCopyStatus(bool);
 
 #[derive(Clone)]
 struct TableFilter {
@@ -136,7 +140,7 @@ impl Filter for DangerFilter {
 
 fn App() -> Element {
     let desktop = dioxus_desktop::use_window();
-    desktop.set_title("Zebra");
+    desktop.set_title("ZebraSign");
 
     use_context_provider(|| Signal::new(ActiveTab::MyKeys));
     use_context_provider(|| Signal::new(NewPrivateName(String::new())));
@@ -144,6 +148,8 @@ fn App() -> Element {
     use_context_provider(|| Signal::new(TextToSign(String::new())));
     use_context_provider(|| Signal::new(MessageToVerify(None)));
     use_context_provider(|| Signal::new(SelectedPublicSigners(BTreeSet::new())));
+    use_context_provider(|| Signal::new(CopiedToClipboard(None)));
+    use_context_provider(|| Signal::new(SignAndCopyStatus(false)));
     use_context_provider(|| {
         Signal::new(SignerFilter(TableFilter {
             name: String::new(),
@@ -186,6 +192,7 @@ fn App() -> Element {
     });
 
     use_context_provider(|| Signal::new(db));
+    use_context_provider(|| Signal::new(ImportKeyResult(None)));
 
     let style = include_str!("style.css");
 
@@ -545,6 +552,7 @@ fn MyKeys() -> Element {
     let new_private_email_val = new_private_email.read().deref().0.clone();
     let new_private_email_copy = new_private_email.read().deref().0.clone();
     let mut selected_private_signer = use_context::<Signal<SelectedPrivateSigner>>();
+    let mut copied_to_clipboard = use_context::<Signal<CopiedToClipboard>>();
     let keys = match dbread.deref() {
         Ok(ref db) => db.visible_contents.my_public_keys.clone(),
         Err(ref e) => {
@@ -671,7 +679,9 @@ fn MyKeys() -> Element {
                                                 move |e| {
                                                     e.stop_propagation();
                                                     if let Ok(mut ctx) = ClipboardContext::new() {
-                                                        let _ = ctx.set_contents(k_copy.clone().into());
+                                                        if ctx.set_contents(k_copy.clone().into()).is_ok() {
+                                                            *copied_to_clipboard.write() = CopiedToClipboard(Some(k_copy.clone()));
+                                                        }
                                                     }
                                                 }
                                             },
@@ -680,6 +690,14 @@ fn MyKeys() -> Element {
                                                 height: 15,
                                                 fill: "black",
                                                 icon: GoCopy,
+                                            }
+                                            if copied_to_clipboard.read().0 == Some(k.clone()) {
+                                                Icon {
+                                                    width: 15,
+                                                    height: 15,
+                                                    fill: "green",
+                                                    icon: GoCheck,
+                                                }
                                             }
                                         }
                                     }
@@ -705,6 +723,8 @@ fn OtherKeys() -> Element {
     };
 
     let filter = use_context::<Signal<PublicFilter>>();
+    let mut import_key_result = use_context::<Signal<ImportKeyResult>>();
+    let mut copied_to_clipboard = use_context::<Signal<CopiedToClipboard>>();
 
     let filter_name = filter.read().0.name.to_lowercase();
     let filter_email = filter.read().0.email.to_lowercase();
@@ -722,6 +742,7 @@ fn OtherKeys() -> Element {
             }
             button {
                 onclick: move |_| {
+                    let mut import_result = import_key_result.write();
                     if let Ok(ref mut db) = dbresult.write().deref_mut() {
                         if let Ok(mut ctx) = ClipboardContext::new() {
                             if let Ok(contents) = ctx.get_contents() {
@@ -730,15 +751,36 @@ fn OtherKeys() -> Element {
                                     if let Ok(key) = PublicKey::from_str(line) {
                                         to_import.push(key)
                                     } else {
+                                        *import_result = ImportKeyResult(Some(Err("Failed to parse key".to_string())));
                                         return;
                                     }
                                 }
                                 let _ = db.add_public_keys(&to_import);
+                                *import_result = ImportKeyResult(Some(Ok(())));
+                            } else {
+                                *import_result = ImportKeyResult(Some(Err("Failed to get contents from clipboard".to_string())));
                             }
+                        } else {
+                            *import_result = ImportKeyResult(Some(Err("Failed to create clipboard context".to_string())));
                         }
+                    } else {
+                        *import_result = ImportKeyResult(Some(Err("Failed to access database".to_string())));
                     }
                 },
                 "Import Public Key from Clipboard"
+            }
+        },
+        {
+            if let Some(Err(e)) = import_key_result.read().0.clone() {
+                rsx! {
+                    div {
+                        class: "data",
+                        style: "height: 100px;",
+                        "Error: {e}"
+                    }
+                }
+            } else {
+                rsx! { "" }
             }
         },
         div {
@@ -797,7 +839,9 @@ fn OtherKeys() -> Element {
                                                 move |e| {
                                                     e.stop_propagation();
                                                     if let Ok(mut ctx) = ClipboardContext::new() {
-                                                        let _ = ctx.set_contents(k_copy.0.clone().into());
+                                                        if ctx.set_contents(k_copy.0.clone().into()).is_ok() {
+                                                            *copied_to_clipboard.write() = CopiedToClipboard(Some(k_copy.0.clone()));
+                                                        }
                                                     }
                                                 }
                                             },
@@ -806,6 +850,14 @@ fn OtherKeys() -> Element {
                                                 height: 15,
                                                 fill: "black",
                                                 icon: GoCopy,
+                                            }
+                                            if copied_to_clipboard.read().0 == Some(k.0.clone()) {
+                                                Icon {
+                                                    width: 15,
+                                                    height: 15,
+                                                    fill: "green",
+                                                    icon: GoCheck,
+                                                }
                                             }
                                         },
                                         DeleteButton {
@@ -842,6 +894,7 @@ fn PrivateSignerSelect() -> Element {
     let my_keys_clone = my_keys.clone();
 
     let mut selected_private_signer = use_context::<Signal<SelectedPrivateSigner>>();
+    let mut sign_and_copy_status = use_context::<Signal<SignAndCopyStatus>>();
     let k = selected_private_signer.read().deref().0.clone();
     let selected_fingerprint = k.map(|k| k.fingerprint());
 
@@ -852,6 +905,7 @@ fn PrivateSignerSelect() -> Element {
                 let selected_private_signer = selected_signer.deref_mut();
                 if let Some(k) = my_keys_clone.get(&evt.value()) {
                     *selected_private_signer = SelectedPrivateSigner(Some(k.clone()));
+                    *sign_and_copy_status.write() = SignAndCopyStatus(false);
                 }
             },
             for (fp, k) in my_keys {
@@ -876,6 +930,7 @@ struct PublicSignerSelectProps {
 
 fn PublicSignerSelect(props: PublicSignerSelectProps) -> Element {
     let mut selected_public_signers = use_context::<Signal<SelectedPublicSigners>>();
+    let mut sign_and_copy_status = use_context::<Signal<SignAndCopyStatus>>();
     let current_signers = selected_public_signers.read();
     let k = props.k.clone();
     rsx! {
@@ -888,6 +943,7 @@ fn PublicSignerSelect(props: PublicSignerSelectProps) -> Element {
                     } else {
                         signers.0.remove(&props.k);
                     }
+                    *sign_and_copy_status.write() = SignAndCopyStatus(false);
                 },
                 checked: current_signers.0.contains(&k),
                 "type": "checkbox",
@@ -909,6 +965,7 @@ fn Sign() -> Element {
 
     let mut text_to_sign = use_context::<Signal<TextToSign>>();
     let text_to_sign_val = text_to_sign.read().deref().0.clone();
+    let mut sign_and_copy_status = use_context::<Signal<SignAndCopyStatus>>();
 
     let filter = use_context::<Signal<SignerFilter>>();
 
@@ -936,7 +993,10 @@ fn Sign() -> Element {
         br {}
         textarea {
             value: "{text_to_sign_val}",
-            oninput: move |evt| *text_to_sign.write() = TextToSign(evt.value().clone()),
+            oninput: move |evt| {
+                *text_to_sign.write() = TextToSign(evt.value().clone());
+                *sign_and_copy_status.write() = SignAndCopyStatus(false);
+            },
             class: "sign_text"
         }
         br {}
@@ -1034,6 +1094,7 @@ fn SignAndCopy() -> Element {
         .into_iter()
         .collect::<Vec<_>>();
     let selected_private_signer = use_context::<Signal<SelectedPrivateSigner>>();
+    let mut sign_and_copy_status = use_context::<Signal<SignAndCopyStatus>>();
     let k = selected_private_signer.read().deref().0.clone();
     rsx! {
         button {
@@ -1042,13 +1103,23 @@ fn SignAndCopy() -> Element {
                     if let Ok(mut ctx) = ClipboardContext::new() {
                         if let Some(k) = &k {
                             if let Ok(signed_message) = db.sign(&text_to_sign_val, k, &current_signers) {
-                                let _ = ctx.set_contents(String::from(&signed_message));
+                                if ctx.set_contents(String::from(&signed_message)).is_ok() {
+                                    *sign_and_copy_status.write() = SignAndCopyStatus(true);
+                                }
                             }
                         }
                     }
                 }
             },
             "Sign and Copy to Clipboard"
+        }
+        if sign_and_copy_status.read().0 {
+            Icon {
+                width: 15,
+                height: 15,
+                fill: "green",
+                icon: GoCheck,
+            }
         }
     }
 }

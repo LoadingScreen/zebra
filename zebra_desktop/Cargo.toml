@@ -1,5 +1,5 @@
 [package]
-name = "Zebra"
+name = "ZebraSign"
 description = "A tool for creating and verifying ring signatures."
 version = "1.0.0-alpha"
 edition = "2021"
@@ -9,7 +9,7 @@ name = "zebra"
 path = "src/lib.rs"
 
 [[bin]]
-name = "Zebra"
+name = "ZebraSign"
 path = "src/main.rs"
 
 [dependencies]
@@ -19,7 +19,7 @@ copypasta = "0.10"
 dioxus = { git = "https://github.com/DioxusLabs/dioxus.git", branch = "master" }
 dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus.git", branch = "master" }
 # dioxus-free-icons = {version = "0.7.0", features = ["octicons"]}
-dioxus-free-icons = { git = "https://github.com/benwr/dioxus-free-icons.git", branch = "main", features = ["octicons"] }
+dioxus-free-icons = { git = "https://github.com/SimonBaars/dioxus-free-icons.git", branch = "main", features = ["octicons"] }
 secmem-proc = "0.3"
 
 boringascii.workspace = true
@@ -28,7 +28,7 @@ zebra_crypto.workspace = true
 zebra_storage.workspace = true
 
 [package.metadata.bundle]
-name = "Zebra"
+name = "ZebraSign"
 identifier = "me.w-r.Zebra"
 icon = ["zebra_head.png"]
 category = "public.app-category.utilities"

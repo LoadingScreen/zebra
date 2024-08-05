@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 
 use directories::ProjectDirs;
 
-pub(crate) const SERVICE_NAME: &str = "Zebra";
+pub(crate) const SERVICE_NAME: &str = "ZebraSign";
 
 fn app_dir() -> PathBuf {
     if let Some(proj_dirs) = ProjectDirs::from("me", "w-r", SERVICE_NAME) {
