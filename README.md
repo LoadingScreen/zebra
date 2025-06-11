@@ -3,19 +3,22 @@
 
 ## What are ring signatures?
 
-Say you want to publish some information. You want people to know that it was
-published by someone trustworthy, with access to that information, but you
-don't want them to know exactly *who* published it. For example, it might be
-information about someone's misconduct, and you fear retaliation.
+A ring signature is a type of cryptographic digital signature. Unlike a standard digital signature, which simply proves that someone wrote a particular message, a ring signature contains multiple signatories, one of which is genuine and the rest of which are forged. The reader(s) of the message have no way to verify which of the signatories is the real one.
+
+## What is this useful for?
+The ring signature protocol was introduced in a 2001 paper titled "How to Leak a Secret".
+Suppose you want to send or publish some information. You want the audience to know that it was
+published by someone credible, with access to that information, but you
+don't want them to know exactly *which* credible person published it. For example, maybe you want to make an allegation of misconduct without revealing your identity and thereby opening yourself up to retaliation.
 
 You can publish the information using a ring signature. To do this, you choose
 a set of people that you want to include in the "ring": This is the set of
-people who, to an observer, *might* have published the information. Then, you
-sign the message using *your* private key, and *their* public keys.
+people who, to an observer, *might* plausibly have known the information and wanted to leak it. Then, you
+sign the message using *your* private key, and all of *their* public keys.
 
 Once you publish the information with a ring signature, anyone who knows the
 public keys of the ring members (you and the other people whose keys you used)
-can tell that *someone* in that group signed the message. But they can't tell
+can prove that *someone* in that group signed the message. But they can't prove
 *which* person it was.
 
 ## Design
