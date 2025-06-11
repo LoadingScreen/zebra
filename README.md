@@ -10,11 +10,11 @@ The ring signature protocol was introduced in a 2001 paper titled "How to Leak a
 
 Suppose you want to send or publish some information. You want the audience to know that it was
 published by someone credible, with access to that information, but you
-don't want them to know exactly *which* credible person published it. For example, maybe you want to make an allegation of misconduct without revealing your identity and thereby opening yourself up to retaliation.
+don't want them to know exactly *which* credible person published it. For example, maybe you want to make an allegation of misconduct--you don't want to put your name on the allegation lest you suffer some retaliation, but if you publish it anonymously you expect it to not be taken seriously.
 
-You can publish the information using a ring signature. To do this, you choose
+You can instead publish the information using a ring signature. To do this, you choose
 a set of people that you want to include in the "ring": This is the set of
-people who, to an observer, *might* plausibly have known the information and wanted to leak it. Then, you
+people who, to an observer, *might* plausibly have known the information and wanted to leak it. (In the example, this would be the set of people who might plausibly have the means and motive to make the allegation of misconduct.) Then, you
 sign the message using *your* private key, and all of *their* public keys.
 
 Once you publish the information with a ring signature, anyone who knows the
