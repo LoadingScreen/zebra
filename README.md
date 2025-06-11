@@ -3,10 +3,10 @@
 
 ## What are ring signatures?
 
-A ring signature is a type of cryptographic digital signature. Unlike a standard digital signature, which simply proves that someone wrote a particular message, a ring signature contains multiple signatories, one of which is genuine and the rest of which are forged. The reader(s) of the message have no way to verify which of the signatories is the real one.
+A [ring signature](https://en.wikipedia.org/wiki/Ring_signature) is a type of [digital signature](https://en.wikipedia.org/wiki/Digital_signature). Unlike a standard digital signature, which simply proves that someone wrote a particular message, a ring signature contains multiple signatories, one of which is genuine and the rest of which are forged. The reader(s) of the message have no way to verify which of the signatories is the real one.
 
 ## What is this useful for?
-The ring signature protocol was introduced in a 2001 paper titled "How to Leak a Secret".
+The ring signature protocol was introduced in a 2001 paper titled ["How to Leak a Secret"](https://doi.org/10.1007%2F3-540-45682-1_32).
 
 Suppose you want to send or publish some information. You want the audience to know that it was
 published by someone credible, with access to that information, but you
