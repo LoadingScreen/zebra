@@ -7,6 +7,7 @@ A ring signature is a type of cryptographic digital signature. Unlike a standard
 
 ## What is this useful for?
 The ring signature protocol was introduced in a 2001 paper titled "How to Leak a Secret".
+
 Suppose you want to send or publish some information. You want the audience to know that it was
 published by someone credible, with access to that information, but you
 don't want them to know exactly *which* credible person published it. For example, maybe you want to make an allegation of misconduct without revealing your identity and thereby opening yourself up to retaliation.
