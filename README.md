@@ -18,7 +18,7 @@ people who, to an observer, *might* plausibly have known the information and wan
 sign the message using *your* private key, and all of *their* public keys.
 
 Once you publish the information with a ring signature, anyone who knows the
-public keys of the ring members (you and the other people whose keys you used)
+public keys of the ring members (and remember the ring includes you and the other people whose keys you used)
 can prove that *someone* in that group signed the message. But they can't prove
 *which* person it was.
 
