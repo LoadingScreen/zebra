@@ -15,10 +15,10 @@ don't want them to know exactly *which* credible person published it. For exampl
 You can instead publish the information using a ring signature. To do this, you choose
 a set of people that you want to include in the "ring": This is the set of
 people who, to an observer, *might* plausibly have known the information and wanted to leak it. (In the example, this would be the set of people who might plausibly have the means and motive to make the allegation of misconduct.) Then, you
-sign the message using *your* private key, and all of *their* public keys.
+sign the message using *your* private key, and all of *their* public keys. You and those people are the members of the ring corresponding to the allegation.
 
 Once you publish the information with a ring signature, anyone who knows the
-public keys of the ring members (and remember the ring includes you and the other people whose keys you used)
+public keys of the ring members 
 can prove that *someone* in that group signed the message. But they can't prove
 *which* person it was.
 
