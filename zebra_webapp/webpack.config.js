@@ -15,6 +15,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         'index.html',
+        'about.html',
         'manifest.json',
         'favicon.ico',
         'android-chrome-192x192.png',

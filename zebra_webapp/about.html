@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Zebrasign - Secure Ring-Signatures"
+    />
+    <link rel="apple-touch-icon" href="android-chrome-192x192.png" />
+    <link rel="manifest" href="manifest.json" />
+    <title>About - Zebrasign</title>
+    <style>
+      body {
+        font-family: Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .header {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .nav {
+        text-align: center;
+        margin: 20px 0;
+        padding: 10px;
+        background-color: #f5f5f5;
+      }
+      .nav a {
+        margin: 0 15px;
+        text-decoration: none;
+        color: #6200ea;
+        font-weight: bold;
+      }
+      .nav a:hover {
+        text-decoration: underline;
+      }
+      .content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+      h2 {
+        color: #6200ea;
+        margin-top: 30px;
+      }
+      p {
+        margin: 15px 0;
+      }
+      a {
+        color: #6200ea;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .copyright_info {
+        font-size: 14px;
+        color: #666;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <img src="android-chrome-192x192.png" alt="Zebrasign Logo" style="vertical-align: middle; width: 50px; height: 50px;">
+      <span style="font-size: 24px; font-weight: bold; vertical-align: middle;">Zebrasign</span>
+    </div>
+    <div class="nav">
+      <a href="index.html">Verify Signature</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="content">
+      <h1>About ZebraSign</h1>
+      
+      <h2>What is ZebraSign?</h2>
+      <p>
+        ZebraSign is a program for creating and verifying ring signatures. This website provides verification, but not signing.
+      </p>
+      
+      <h2>What are Ring Signatures?</h2>
+      <p>
+        A ring signature is a digital signature produced using one private key plus some number of public keys. 
+        The resulting message can be proven to have been signed by exactly one of those keyholders, but there is 
+        no way to prove which one. This is different from Group Signatures.
+      </p>
+      
+      <h2>How to Use This Website</h2>
+      <p>
+        If you want to verify a ring signature, you can do that here. Copy and paste the entire ring-signed message 
+        into the text box, and it will tell you if the identities listed were in fact used to sign the message. 
+        That is not sufficient to implicate the people named in the list–for that, you will need to see some 
+        endorsement of the identity by those people, for example fingerprints listed on a personal website or 
+        twitter bio or similar.
+      </p>
+      
+      <h2>Want More Features?</h2>
+      <p>
+        If you wish verification were easier, or if you want to sign messages, you can download the app.
+      </p>
+      
+      <h2>Resources</h2>
+      <p>
+        <a href="https://docs.google.com/document/d/1mIHyTdD0IZ0ywjuczsk4Tcsi23PJdQIFu8gZjiZg4B4/edit">Frequently Asked Questions</a>
+      </p>
+      
+      <div class="copyright_info">
+        <p>
+          <strong>Version:</strong> 1.0.0-beta
+        </p>
+        <p>
+          App Logo adapted from 
+          <a href="https://www.flickr.com/photos/carolemage/8270400666">
+            Zebra, marble sculpture of Denis Foyatier (1830), Louvre Museum
+          </a>
+          by Carole Raddato. Image is licensed under a 
+          <a href="https://creativecommons.org/licenses/by-sa/2.0/">
+            Creative Commons Attribution-ShareAlike 2.0 Generic License
+          </a>
+        </p>
+        <p>
+          All other content is written by Ben Weinstein-Raun; copyright assigned to Kurt Brown. 
+          Source code available at 
+          <a href="https://github.com/LoadingScreen/zebra">
+            https://github.com/LoadingScreen/zebra
+          </a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
