@@ -68,12 +68,22 @@
         padding-top: 20px;
         border-top: 1px solid #ddd;
       }
+      .logo-link {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+      }
+      .logo-link:hover {
+        opacity: 0.8;
+      }
     </style>
   </head>
   <body>
     <div class="header">
-      <img src="android-chrome-192x192.png" alt="Zebrasign Logo" style="vertical-align: middle; width: 50px; height: 50px;">
-      <span style="font-size: 24px; font-weight: bold; vertical-align: middle;">Zebrasign</span>
+      <a href="index.html" class="logo-link">
+        <img src="android-chrome-192x192.png" alt="Zebrasign Logo" style="vertical-align: middle; width: 50px; height: 50px;">
+        <span style="font-size: 24px; font-weight: bold; vertical-align: middle;">Zebrasign</span>
+      </a>
     </div>
     <div class="nav">
       <a href="index.html">Verify Signature</a>
