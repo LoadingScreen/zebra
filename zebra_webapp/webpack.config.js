@@ -8,13 +8,18 @@ module.exports = {
     filename: "bootstrap.js",
   },
   mode: "production",
+  experiments: {
+    asyncWebAssembly: true
+  },
   plugins: [
-    new CopyWebpackPlugin([
-      'index.html',
-      'manifest.json',
-      'favicon.ico',
-      'android-chrome-192x192.png',
-      'android-chrome-512x512.png'
-    ])
+    new CopyWebpackPlugin({
+      patterns: [
+        'index.html',
+        'manifest.json',
+        'favicon.ico',
+        'android-chrome-192x192.png',
+        'android-chrome-512x512.png'
+      ]
+    })
   ],
 };
