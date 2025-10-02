@@ -92,6 +92,14 @@
       .nav a:hover {
         text-decoration: underline;
       }
+      .logo-link {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+      }
+      .logo-link:hover {
+        opacity: 0.8;
+      }
     </style>
   </head>
   <body>
@@ -103,8 +111,10 @@
       document.head.appendChild(script);
     </script>
     <div style="text-align: center; margin-top: 20px;">
-      <img src="android-chrome-192x192.png" alt="Zebrasign Logo" style="vertical-align: middle; width: 50px; height: 50px;">
-      <span style="font-size: 24px; font-weight: bold; vertical-align: middle;">Zebrasign</span>
+      <a href="index.html" class="logo-link">
+        <img src="android-chrome-192x192.png" alt="Zebrasign Logo" style="vertical-align: middle; width: 50px; height: 50px;">
+        <span style="font-size: 24px; font-weight: bold; vertical-align: middle;">Zebrasign</span>
+      </a>
     </div>
     <div class="nav">
       <a href="index.html">Verify Signature</a>
